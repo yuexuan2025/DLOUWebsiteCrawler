@@ -72,6 +72,8 @@ class DlouCrawler:
         """执行一次完整采集：扫描栏目 → 并发读取正文 → 按标题去重返回文章列表。"""
         candidates: dict[str, tuple[str, str]] = {}
         for category, source_url in SOURCES:
+            if len(candidates) >= self.max_articles:
+                break
             print(f"· 扫描栏目：{category}（读取列表页中…）")
             self._collect_listing_links(category, source_url, candidates)
         total = len(candidates)
