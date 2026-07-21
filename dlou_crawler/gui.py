@@ -83,7 +83,7 @@ class CrawlerGUI:
         hero.create_text(24, 72, text="大连海洋大学官网采集器", fill="white",
                          font=("Microsoft YaHei UI", 12), anchor="w")
         hero.create_text(24, 100, text="快速采集学校要闻、通知公告、学生发展、各学院动态",
-                         fill="rgba(255,255,255,0.85)",
+                         fill="#e0e7ff",
                          font=("Microsoft YaHei UI", 10), anchor="w")
 
         self._status_label = Label(hero, text="● 就绪", fg="#a7f3d0",
