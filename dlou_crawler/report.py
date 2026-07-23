@@ -13,9 +13,6 @@ def _format_date(date: Optional[datetime]) -> str:
 
 
 def generate_html_report(articles: list[Article], output_path: str) -> str:
-    if not articles:
-        articles = []
-
     total_count = len(articles)
     generate_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
