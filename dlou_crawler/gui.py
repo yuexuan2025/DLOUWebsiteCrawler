@@ -59,8 +59,7 @@ class CrawlerGUI:
         self._canvas.bind_all("<MouseWheel>", self._on_mousewheel)
 
         self._build_hero()
-        self._build_control()
-        self._build_log()
+        self._build_mid_section()
         self._build_results()
 
     def _on_mousewheel(self, event) -> None:
@@ -90,10 +89,27 @@ class CrawlerGUI:
                                    bg="#2563eb", font=("Microsoft YaHei UI", 10, "bold"))
         self._status_label.place(x=24, y=112)
 
-    def _build_control(self) -> None:
-        card = Frame(self._content, bg="white", bd=0, highlightthickness=1,
+    def _build_mid_section(self) -> None:
+        mid = Frame(self._content, bg="#f8fafc")
+        mid.pack(fill="x", padx=24, pady=8)
+
+        left = Frame(mid, bg="#f8fafc")
+        left.pack(side="left", fill="both", expand=True)
+        left.pack_propagate(False)
+        left.configure(width=480)
+
+        right = Frame(mid, bg="#f8fafc")
+        right.pack(side="right", fill="both", expand=True)
+        right.pack_propagate(False)
+        right.configure(width=480)
+
+        self._build_control(left)
+        self._build_log(right)
+
+    def _build_control(self, parent: Frame) -> None:
+        card = Frame(parent, bg="white", bd=0, highlightthickness=1,
                      highlightbackground="#e2e8f0")
-        card.pack(fill="x", padx=24, pady=8)
+        card.pack(fill="both", expand=True)
 
         header = Frame(card, bg="white")
         header.pack(fill="x", padx=20, pady=(16, 12))
@@ -128,10 +144,10 @@ class CrawlerGUI:
                                   bg="white", fg="#64748b", font=("Microsoft YaHei UI", 10))
         self._count_label.pack(side="left")
 
-    def _build_log(self) -> None:
-        card = Frame(self._content, bg="white", bd=0, highlightthickness=1,
+    def _build_log(self, parent: Frame) -> None:
+        card = Frame(parent, bg="white", bd=0, highlightthickness=1,
                      highlightbackground="#e2e8f0")
-        card.pack(fill="x", padx=24, pady=8)
+        card.pack(fill="both", expand=True)
 
         header = Frame(card, bg="white")
         header.pack(fill="x", padx=20, pady=(16, 12))

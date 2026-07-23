@@ -55,6 +55,10 @@ class _ArticleExtractor(HTMLParser):
             "article", "content", "main", "text", "detail",
             "news_content", "v_news_content", "article-content",
             "entry-content", "post-content", "wp-content",
+            "newsdetail", "news-detail", "news_detail",
+            "artdetail", "art-detail", "art_detail",
+            "list-content", "show-content", "view-content",
+            "content-main", "main-content",
         ]
 
         if not self._in_content:
@@ -177,7 +181,7 @@ def date_from_text(text) -> datetime | None:
 
     patterns = [
         r"(\d{4})[-/年.](\d{1,2})[-/月.](\d{1,2})",
-        r"(\d{4})(\d{2})(\d{2})",
+        r"(?<!\d)(\d{4})(\d{2})(\d{2})(?!\d)",
     ]
 
     for pattern in patterns:
@@ -306,33 +310,52 @@ def extract_list_links(html: str, base_url: str) -> list[dict]:
             super().__init__()
             self._current_href = None
             self._current_text = []
-            self._in_li = False
+            self._skip_depth = 0
+            self._skip_tags = {"script", "style", "header", "footer", "nav"}
             self.found_links = []
+            self._seen_urls = set()
 
         def handle_starttag(self, tag, attrs):
             attrs_dict = dict(attrs)
-            if tag == "li":
-                self._in_li = True
-            if tag == "a" and self._in_li:
-                self._current_href = attrs_dict.get("href", "")
-                self._current_text = []
+
+            if tag in self._skip_tags:
+                self._skip_depth += 1
+                return
+            if self._skip_depth > 0:
+                return
+
+            if tag == "a":
+                href = attrs_dict.get("href", "")
+                if href:
+                    self._current_href = href
+                    self._current_text = []
 
         def handle_endtag(self, tag):
+            if tag in self._skip_tags:
+                self._skip_depth -= 1
+                if self._skip_depth < 0:
+                    self._skip_depth = 0
+                return
+            if self._skip_depth > 0:
+                return
+
             if tag == "a" and self._current_href is not None:
                 text = "".join(self._current_text).strip()
                 if is_article_link(self._current_href, text):
                     url = urljoin(base_url, self._current_href)
-                    self.found_links.append({
-                        "url": url,
-                        "title": text,
-                        "date": None,
-                    })
+                    if url not in self._seen_urls:
+                        self._seen_urls.add(url)
+                        self.found_links.append({
+                            "url": url,
+                            "title": text,
+                            "date": None,
+                        })
                 self._current_href = None
                 self._current_text = []
-            if tag == "li":
-                self._in_li = False
 
         def handle_data(self, data):
+            if self._skip_depth > 0:
+                return
             if self._current_href is not None:
                 self._current_text.append(data)
 
