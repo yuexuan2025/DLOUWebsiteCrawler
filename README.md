@@ -2,7 +2,6 @@
 
 大连海洋大学官网采集器
 
-[![最新版本](https://img.shields.io/github/v/release/yuexuan2025/DLOUWebsiteCrawler?label=最新版本)](https://github.com/yuexuan2025/DLOUWebsiteCrawler/releases)
 [![平台](https://img.shields.io/badge/平台-Windows-green)](#)
 [![语言](https://img.shields.io/badge/语言-Python-blue)](#)
 [![许可](https://img.shields.io/badge/许可-MIT-yellow)](#)
