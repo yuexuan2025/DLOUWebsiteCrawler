@@ -1,0 +1,8 @@
+# 运行时仅需 Python 3.10+ 标准库（urllib / html.parser / tkinter）
+# 下列为可选与打包依赖
+
+# GUI 图片预览（可选，缺失时预览降级）
+pillow>=10.0
+
+# 打包发行版 EXE
+pyinstaller>=6.0
